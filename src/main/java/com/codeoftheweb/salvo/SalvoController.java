@@ -141,11 +141,11 @@ public class SalvoController {
         if (gamePlayer.getGame().getGamePlayers().size() < 2) {
             status = "Waiting for an opponent!";
         } else {
-            status = "Place your ships!"; //IF both == 0
+            status = "Place your ships!";
             if (gamePlayer.getShips().size() != getOpponent(gamePlayer).getShips().size()) {
                 status = "Waiting for ships to be placed!";
             }
-            if (gamePlayer.getSalvoes().size() == getOpponent(gamePlayer).getSalvoes().size()) {
+            if ((gamePlayer.getSalvoes().size() == getOpponent(gamePlayer).getSalvoes().size()) && (gamePlayer.getShips().size() != 0 && getOpponent(gamePlayer).getShips().size() != 0)) {
                 status = "Fire your salvoes!";
             }
             if (gamePlayer.getSalvoes().size() != getOpponent(gamePlayer).getSalvoes().size()) {
@@ -324,13 +324,19 @@ public class SalvoController {
                 (currentGamePlayer == null) || (authenticatedUser(authentication).get("id") != currentGamePlayer.getPlayer().getId())) {
             return new ResponseEntity<>("User is not logged in", HttpStatus.UNAUTHORIZED);
         } else {
+            if (currentGamePlayer.getGame().getGamePlayers().size() < 2) {
+                return new ResponseEntity<>("Waiting for an opponent!", HttpStatus.FORBIDDEN);
+            }
             if (newSalvo.getSalvoLocation().size() != 5) {
                 return new ResponseEntity<>("Salvoes must be fired in sets of 5!", HttpStatus.FORBIDDEN);
-            } else {
+            } else if(currentGamePlayer.getSalvoes().size() > getOpponent(currentGamePlayer).getSalvoes().size()) {
+                return new ResponseEntity<>("Waiting for opponent's salvoes!", HttpStatus.FORBIDDEN);
+            }
+            else {
                 newSalvo.setTurn(currentGamePlayer.getSalvoes().size() + 1);
                 newSalvo.setGamePlayer(currentGamePlayer);
                 salvoRepository.save(newSalvo);
-                return new ResponseEntity<>("Salvo fired!", HttpStatus.CREATED);
+                return new ResponseEntity<>("Salvoes successfully fired!", HttpStatus.CREATED);
             }
         }
     }
