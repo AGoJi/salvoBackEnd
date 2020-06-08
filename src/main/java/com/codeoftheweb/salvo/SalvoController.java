@@ -260,6 +260,9 @@ public class SalvoController {
         if (playerExists != null) {
             return new ResponseEntity<>(makeMap("error", "This user already exists!"), HttpStatus.FORBIDDEN);
         }
+        if (userName.isEmpty() || userEmail.isEmpty() || password.isEmpty() || !userEmail.contains("@") || userEmail.contains(" ")) {
+            return new ResponseEntity<>(makeMap("error", "Woops! You're missing something in the sign up form!"), HttpStatus.UNAUTHORIZED);
+        }
         Player newUser = new Player(userName, userEmail, passwordEncoder.encode(password));
         playerRepository.save(newUser);
         return new ResponseEntity<>(makeMap("userName", newUser.getUserName()), HttpStatus.CREATED);

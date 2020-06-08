@@ -41,7 +41,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-	/*@Bean
+	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 
@@ -268,7 +268,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			scoreRepository.save(sc7);
 			scoreRepository.save(sc8);
 		};
-	}*/
+	}
 }
 
 @Configuration
